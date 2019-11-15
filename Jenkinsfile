@@ -27,6 +27,8 @@ pipeline {
 			steps {
 				echo "NAMESPACE is: ${env.NAMESPACE}"
 				echo "Build Number is: ${env.BUILD_NUMBER}"
+				env.TAG = "2.${env.BUILD_NUMBER}"
+				echo "TAG is : ${env.TAG}"
 				echo "Job Name is: ${env.JOB_NAME}"
 				sh "oc version"
 				sh 'printenv'
@@ -97,7 +99,7 @@ pipeline {
 									return allDone;
 								}
 							}
-							openshift.tag("${env.NAMESPACE}/amq7-custom:latest", "${env.NAMESPACE}/amq7-custom:1.${env.BUILD_NUMBER}")
+							openshift.tag("${env.NAMESPACE}/amq7-custom:latest", "${env.NAMESPACE}/amq7-custom:${env.TAG}")
 							if (!openshift.selector('sts', "${params.APP_NAME}-amq").exists()) {
 								env.APP_ALREADY_EXISTS = false;
 							}
@@ -118,7 +120,7 @@ pipeline {
 						//openshift.verbose() // set logging level for subsequent operations executed (loglevel=8)
 						openshift.withProject("${env.NAMESPACE}") {
 							def no_of_replicas = Integer.parseInt("${params.NO_OF_REPLICAS}")
-							def amqSts = openshift.newApp("amq-broker-75-custom", "-p APPLICATION_NAME=${params.APP_NAME}", "-p AMQ_QUEUES=demoQueue", "-p AMQ_ADDRESSES=demoTopic", "-p AMQ_USER=amq-demo-user", "-p AMQ_PASSWORD=passw0rd", "-p AMQ_ROLE=amq,bijrole", "-p AMQ_SECRET=amq-app-secret", "-p AMQ_DATA_DIR=/opt/amq/data", "-p AMQ_TRUSTSTORE_PASSWORD=password", "-p AMQ_KEYSTORE_PASSWORD=password", "-p AMQ_DATA_DIR_LOGGING=true", "-p IMAGE=${env.NAMESPACE}/amq7-custom:1.${env.BUILD_NUMBER}", "-p AMQ_PROTOCOL=amqp", "-p AMQ_CLUSTERED=true", "-p AMQ_REPLICAS=${no_of_replicas}", "-e SCRIPT_DEBUG=true")
+							def amqSts = openshift.newApp("amq-broker-75-custom", "-p APPLICATION_NAME=${params.APP_NAME}", "-p AMQ_QUEUES=demoQueue", "-p AMQ_ADDRESSES=demoTopic", "-p AMQ_USER=amq-demo-user", "-p AMQ_PASSWORD=passw0rd", "-p AMQ_ROLE=amq,bijrole", "-p AMQ_SECRET=amq-app-secret", "-p AMQ_DATA_DIR=/opt/amq/data", "-p AMQ_TRUSTSTORE_PASSWORD=password", "-p AMQ_KEYSTORE_PASSWORD=password", "-p AMQ_DATA_DIR_LOGGING=true", "-p IMAGE=${env.NAMESPACE}/amq7-custom:${env.TAG}", "-p AMQ_PROTOCOL=amqp", "-p AMQ_CLUSTERED=true", "-p AMQ_REPLICAS=${no_of_replicas}", "-e SCRIPT_DEBUG=true")
 							amqSts = amqSts.narrow('statefulset')
 							timeout(15) {
 								amqSts.watch {
@@ -145,7 +147,7 @@ pipeline {
               def no_of_replicas = Integer.parseInt("${params.NO_OF_REPLICAS}")
 							def amqStsSelector = openshift.selector('sts', "${params.APP_NAME}-amq")
               def amqSts = amqStsSelector.object()
-							def newContainerImage = "172.30.1.1:5000/${env.NAMESPACE}/amq7-custom:1.${env.BUILD_NUMBER}"
+							def newContainerImage = "docker-registry.default.svc:5000/${env.NAMESPACE}/amq7-custom:${env.TAG}"
 							echo "Old Image is -- ${amqSts.spec.template.spec.containers[0].image}"
 							amqSts.spec.template.spec.containers[0].image = newContainerImage
               echo "New Image is -- ${amqSts.spec.template.spec.containers[0].image}"
