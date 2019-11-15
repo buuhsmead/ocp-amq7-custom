@@ -39,7 +39,8 @@ pipeline {
 						//openshift.verbose() // set logging level for subsequent operations executed (loglevel=8)
 						openshift.withProject("${env.NAMESPACE}") {
 							def AMQ_IMAGE_STREAM = "https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/75-7.5.0.GA/amq-broker-7-image-streams.yaml"
-							def AMQ_TEMPLATE = "https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/75-7.5.0.GA/templates/amq-broker-75-persistence-clustered-ssl.yaml"
+							##def AMQ_TEMPLATE = "https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/75-7.5.0.GA/templates/amq-broker-75-persistence-clustered-ssl.yaml"
+							def AMQ_TEMPLATE = "templates/amq-broker-75-custom.yaml"
 							echo "Creating/updating AMQ ImageStream & Template"
 							openshift.replace("--force", "-f ", "${AMQ_IMAGE_STREAM}")
 							openshift.replace("--force", "-f ", "${AMQ_TEMPLATE}")
@@ -64,11 +65,13 @@ pipeline {
 								roleBindingObject = openshift.create(roleBinding).object()
 							}
 							if (!openshift.selector('secrets', 'amq-app-secret').exists()) {
-								// def amqSecretFile = readJSON file: "${workspace}@script/amq-app-secret.json"
-								def amqSecretFile = readFile("${workspace}@script/amq-app-secret.json")
-								def amqSecretSelector = openshift.create(amqSecretFile).object()
-								amqSecretSelector.metadata.put('labels', ["application": "${params.APP_NAME}"])
-								openshift.apply(amqSecretSelector) // Patch the object on the server
+// 								// def amqSecretFile = readJSON file: "${workspace}@script/amq-app-secret.json"
+// 								def amqSecretFile = readFile("${workspace}@script/amq-app-secret.json")
+// 								def amqSecretSelector = openshift.create(amqSecretFile).object()
+// 								amqSecretSelector.metadata.put('labels', ["application": "${params.APP_NAME}"])
+// 								openshift.apply(amqSecretSelector) // Patch the object on the server
+                                sh "keytool -genkey -alias broker -keyalg RSA -keystore broker.ks -storepass password -keypass password -dname CN=broker.amq.custom.ocp.example.com -storetype pkcs12"
+                                sh "oc create secret generic amq-app-secret --from-file=broker.ks"
 							}
 							def customAMQ7BcSelector = openshift.selector('bc', 'amq7-custom')
 							def customAMQ7Build
