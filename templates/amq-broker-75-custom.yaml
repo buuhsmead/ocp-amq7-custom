@@ -517,6 +517,7 @@ parameters:
   - description: "Determines whether or not the broker will allow anonymous access, or require login"
     displayName: AMQ Require Login
     name: AMQ_REQUIRE_LOGIN
+    value: true
   - description: Name of a secret containing SSL related files
     displayName: Secret Name
     name: AMQ_SECRET
