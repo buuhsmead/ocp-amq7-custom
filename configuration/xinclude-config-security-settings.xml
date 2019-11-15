@@ -1,0 +1,16 @@
+
+<security-settings xmlns="urn:activemq:core">
+<security-setting match="#">
+    <permission type="createNonDurableQueue" roles="${AMQ_ROLE}"/>
+    <permission type="deleteNonDurableQueue" roles="${AMQ_ROLE}"/>
+    <permission type="createDurableQueue" roles="${AMQ_ROLE}"/>
+    <permission type="deleteDurableQueue" roles="${AMQ_ROLE}"/>
+    <permission type="createAddress" roles="${AMQ_ROLE}"/>
+    <permission type="deleteAddress" roles="${AMQ_ROLE}"/>
+    <permission type="consume" roles="${AMQ_ROLE}"/>
+    <permission type="browse" roles="${AMQ_ROLE}"/>
+    <permission type="send" roles="${AMQ_ROLE}"/>
+    <!-- we need this otherwise ./artemis data imp wouldn't work -->
+    <permission type="manage" roles="${AMQ_ROLE}"/>
+</security-setting>
+</security-settings>
