@@ -147,7 +147,7 @@ pipeline {
               def amqSts = amqStsSelector.object()
 							//def newContainerImage = "docker-registry.default.svc:5000/${env.NAMESPACE}/amq7-custom:1.${env.BUILD_NUMBER}"
 							// to get it right for ocp3 and ocp4
-							def newContainerImage = "${env.NAMESPACE}/amq7-custom:1.${env.BUILD_NUMBER}"
+							def newContainerImage = "amq7-custom:1.${env.BUILD_NUMBER}"
 							echo "Old Image is -- ${amqSts.spec.template.spec.containers[0].image}"
 							amqSts.spec.template.spec.containers[0].image = newContainerImage
               echo "New Image is -- ${amqSts.spec.template.spec.containers[0].image}"
