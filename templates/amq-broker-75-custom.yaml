@@ -400,6 +400,15 @@ objects:
                     - "/opt/amq/bin/readinessProbe.sh"
               image: ${IMAGE}
               name: ${APPLICATION_NAME}-amq
+              lifecycle:
+                postStart:
+                  exec:
+                    command:
+                      - sh
+                      - '-c'
+                      - >-
+                        sed -i '/^runServer/i bash
+                        /home/jboss/broker/etc/post_launch.sh' /opt/amq/bin/launch.sh
               ports:
                 - containerPort: 8161
                   name: console-jolokia
