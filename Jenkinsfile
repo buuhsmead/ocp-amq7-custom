@@ -40,7 +40,7 @@ pipeline {
 						openshift.withProject("${env.NAMESPACE}") {
 							def AMQ_IMAGE_STREAM = "https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/75-7.5.0.GA/amq-broker-7-image-streams.yaml"
 							// def AMQ_TEMPLATE = "https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/75-7.5.0.GA/templates/amq-broker-75-persistence-clustered-ssl.yaml"
-							def AMQ_TEMPLATE = "templates/amq-broker-75-custom.yaml"
+							def AMQ_TEMPLATE = "${env.WORKSPACE}/templates/amq-broker-75-custom.yaml"
 							echo "Creating/updating AMQ ImageStream & Template"
 							openshift.replace("--force", "-f ", "${AMQ_IMAGE_STREAM}")
 							openshift.replace("--force", "-f ", "${AMQ_TEMPLATE}")
