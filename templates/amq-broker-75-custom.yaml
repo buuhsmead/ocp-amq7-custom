@@ -595,7 +595,7 @@ parameters:
     required: false
   - description: The broker.xml configuration file.
     displayName: broker.xml
-    name: BROKER_XML
+    name: BROKER_XML_DISABLED
     value: |-
       <?xml version='1.0'?>
       <configuration xmlns="urn:activemq"
@@ -737,7 +737,7 @@ parameters:
       </configuration>
   - description: The logging.properties configuration file.
     displayName: logging.properties
-    name: LOGGING_PROPERTIES
+    name: LOGGING_PROPERTIES_DISABLED
     value: |-
       "#
       # Licensed to the Apache Software Foundation (ASF) under one or more
