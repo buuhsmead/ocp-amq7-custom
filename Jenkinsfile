@@ -145,9 +145,7 @@ pipeline {
               def no_of_replicas = Integer.parseInt("${params.NO_OF_REPLICAS}")
 							def amqStsSelector = openshift.selector('sts', "${params.APP_NAME}-amq")
               def amqSts = amqStsSelector.object()
-							//def newContainerImage = "docker-registry.default.svc:5000/${env.NAMESPACE}/amq7-custom:1.${env.BUILD_NUMBER}"
-							// to get it right for ocp3 and ocp4
-							def newContainerImage = "amq7-custom:1.${env.BUILD_NUMBER}"
+							def newContainerImage = "docker-registry.default.svc:5000/${env.NAMESPACE}/amq7-custom:1.${env.BUILD_NUMBER}"
 							echo "Old Image is -- ${amqSts.spec.template.spec.containers[0].image}"
 							amqSts.spec.template.spec.containers[0].image = newContainerImage
               echo "New Image is -- ${amqSts.spec.template.spec.containers[0].image}"
