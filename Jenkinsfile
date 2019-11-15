@@ -7,6 +7,7 @@ openshift.withCluster() {
 pipeline {
 	environment {
 		def timestamp = "${System.currentTimeMillis()}"
+		TAG = "2.${env.BUILD_NUMBER}"
 	}
 	options {
 		// set a timeout of 20 minutes for this pipeline
@@ -22,9 +23,7 @@ pipeline {
 		string(name: 'APP_NAME', defaultValue: 'amq-broker', description: "Application Name - all resources use this name as a label use lowercase")
 		string(name: 'NO_OF_REPLICAS', defaultValue: '2', description: "AMQ Cluster Replica size")
 	}
-	environment {
-            TAG = "2.${env.BUILD_NUMBER}"
-        }
+
 	stages {
 		stage('initialise') {
 			steps {
