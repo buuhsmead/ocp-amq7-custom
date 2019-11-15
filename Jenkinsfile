@@ -7,7 +7,7 @@ openshift.withCluster() {
 pipeline {
 	environment {
 		def timestamp = "${System.currentTimeMillis()}"
-		TAG = "2.${env.BUILD_NUMBER}"
+		TAG = "${env.SOURCE_GIT_TAG}.${env.BUILD_NUMBER}"
 	}
 	options {
 		// set a timeout of 20 minutes for this pipeline
