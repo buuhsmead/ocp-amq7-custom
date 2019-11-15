@@ -3,10 +3,8 @@ AMQ7 on OCP and customizing
 
 
 
-curl -O https://raw.githubusercontent.com/jboss-container-images/jboss-amq-7-broker-openshift-image/75-7.5.0.GA/templates/amq-broker-75-persistence-clustered-ssl.yaml
-
-cp amq-broker-75-persistence-clustered-ssl.yaml amq-broker-75-custom.yaml
-
+# Give jenkins SA enough rights (fine tuning still needed)
+oc policy add-role-to-user edit system:serviceaccount:$(oc project -q):jenkins
 
 
 
