@@ -406,9 +406,7 @@ objects:
                     command:
                       - sh
                       - '-c'
-                      - >-
-                        sed -i '/^runServer/i bash
-                        /home/jboss/broker/etc/post_launch.sh' /opt/amq/bin/launch.sh
+                      - sed -i '/^runServer/i /bin/sh /home/jboss/broker/etc/post_launch.sh' /opt/amq/bin/launch.sh
               ports:
                 - containerPort: 8161
                   name: console-jolokia
@@ -604,8 +602,9 @@ parameters:
     required: false
   - description: The broker.xml configuration file.
     displayName: broker.xml
-    name: BROKER_XML_DISABLED
+    name: BROKER_XML
     value: |-
+      <!-- Remove this tag to enable custom configuration -->
       <?xml version='1.0'?>
       <configuration xmlns="urn:activemq"
                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -746,9 +745,10 @@ parameters:
       </configuration>
   - description: The logging.properties configuration file.
     displayName: logging.properties
-    name: LOGGING_PROPERTIES_DISABLED
+    name: LOGGING_PROPERTIES
     value: |-
-      "#
+      "<!-- Remove this tag to enable custom configuration -->
+      #
       # Licensed to the Apache Software Foundation (ASF) under one or more
       # contributor license agreements. See the NOTICE file distributed with
       # this work for additional information regarding copyright ownership.
