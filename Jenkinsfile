@@ -22,12 +22,15 @@ pipeline {
 		string(name: 'APP_NAME', defaultValue: 'amq-broker', description: "Application Name - all resources use this name as a label use lowercase")
 		string(name: 'NO_OF_REPLICAS', defaultValue: '2', description: "AMQ Cluster Replica size")
 	}
+	environment {
+            TAG = "2.${env.BUILD_NUMBER}"
+        }
 	stages {
 		stage('initialise') {
 			steps {
 				echo "NAMESPACE is: ${env.NAMESPACE}"
 				echo "Build Number is: ${env.BUILD_NUMBER}"
-				env.TAG = "2.${env.BUILD_NUMBER}"
+
 				echo "TAG is : ${env.TAG}"
 				echo "Job Name is: ${env.JOB_NAME}"
 				sh "oc version"
