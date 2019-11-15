@@ -386,6 +386,8 @@ objects:
                   value: ${AMQ_ENABLE_METRICS_PLUGIN}
                 - name: AMQ_JOURNAL_TYPE
                   value: ${AMQ_JOURNAL_TYPE}
+                - name: LDAP_BIND_PASSWORD
+                  value: ${LDAP_BIND_PASSWORD}
               readinessProbe:
                 exec:
                   command:
@@ -580,4 +582,9 @@ parameters:
     displayName: AMQ Journal Type
     name: AMQ_JOURNAL_TYPE
     value: nio
+    required: false
+  - description: password bind ldap
+    displayName: LDAP bind password
+    name: LDAP_BIND_PASSWORD
+    value: geenIdee
     required: false
