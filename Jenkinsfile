@@ -12,7 +12,7 @@ pipeline {
 		// set a timeout of 20 minutes for this pipeline
 		timeout(time: 20, unit: 'MINUTES')
 		// when running Jenkinsfile from SCM using jenkinsfilepath the node implicitly does a checkout
-		skipDefaultCheckout()
+	//	skipDefaultCheckout()
 		// Disallow concurrent executions of the Pipeline
 		disableConcurrentBuilds()
 	}
