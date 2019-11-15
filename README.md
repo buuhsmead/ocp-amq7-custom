@@ -13,3 +13,7 @@ oc policy add-role-to-user admin system:serviceaccount:$(oc project -q):jenkins
 
 oc new-app https://github.com/buuhsmead/ocp-amq7-custom
 
+
+
+
+sed -i.bak 's/hawtio.role=amq/hawtio.role=AMQGroup/g' login.config
