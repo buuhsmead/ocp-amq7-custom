@@ -727,11 +727,11 @@ parameters:
 
             </acceptors>
 
-  <xi:include href="./xinclude-config-security-settings.xml"/>
+            <xi:include href="./xinclude-config-security-settings.xml"/>
 
-  <xi:include href="./xinclude-config-address-settings.xml"/>
+            <xi:include href="./xinclude-config-address-settings.xml"/>
 
-  <xi:include href="./xinclude-config-addresses.xml"/>
+            <xi:include href="./xinclude-config-addresses.xml"/>
 
          </core>
       </configuration>
