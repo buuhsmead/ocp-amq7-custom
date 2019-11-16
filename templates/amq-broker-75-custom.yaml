@@ -406,7 +406,7 @@ objects:
                     command:
                       - sh
                       - '-c'
-                      - sed -i '/Running Broker/a /bin/sh /home/jboss/broker/etc/post_launch.sh' /opt/amq/bin/launch.sh
+                      - sed -i '/Running Broker/a /bin/sh /home/jboss/broker/etc/pre_launch.sh' /opt/amq/bin/launch.sh
               ports:
                 - containerPort: 8161
                   name: console-jolokia
