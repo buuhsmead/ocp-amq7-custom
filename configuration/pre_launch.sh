@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "POST START LAUNCH"
+echo "PRE LAUNCH START"
 
 INSTANCE_DIR=/home/jboss/broker
 
