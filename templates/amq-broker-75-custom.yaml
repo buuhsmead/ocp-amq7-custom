@@ -382,7 +382,7 @@ objects:
                 - name: AMQ_CLUSTERED
                   value: ${AMQ_CLUSTERED}
                 - name: AMQ_REPLICAS
-                  value: ${AMQ_REPLICAS}
+                  value: "${AMQ_REPLICAS}"
                 - name: AMQ_CLUSTER_USER
                   valueFrom:
                     secretKeyRef:
