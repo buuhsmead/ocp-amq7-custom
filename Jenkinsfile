@@ -153,7 +153,8 @@ def models = openshift.process( "amq-broker-75-custom", "-p APPLICATION_NAME=${p
 openshift.apply(models)
 
 
-							amqSts = amqSts.narrow('statefulset')
+							def amqStsSelector = openshift.selector('sts', "${params.APP_NAME}-amq")
+							def amqSts = amqStsSelector.object()
 							timeout(15) {
 								amqSts.watch {
 									echo "Waiting for ${it.name()} to be ready"
