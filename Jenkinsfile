@@ -170,10 +170,10 @@ openshift.apply(models)
 
 
 		stage('Recreate PODs to take latest image') {
-			when {
-				environment name: 'APP_ALREADY_EXISTS',
-				value: 'true'
-			}
+// 			when {
+// 				environment name: 'APP_ALREADY_EXISTS',
+// 				value: 'true'
+// 			}
 			steps {
 				script {
 					openshift.withCluster() {
