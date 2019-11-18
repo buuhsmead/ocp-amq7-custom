@@ -2,4 +2,7 @@
 
 set -x
 
-echo "HALLO ALLEMAAL "
+/usr/local/s2i/assemble
+
+echo "ADDING PRE LAUNCH HOOK SCRIPT"
+sed -i '/Running Broker/a    . /home/jboss/broker/etc/pre_launch.sh' /opt/amq/bin/launch.sh
