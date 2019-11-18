@@ -33,6 +33,13 @@ objects:
       ${AMQ_TRUSTSTORE_PASSWORD}: cGFzc3dvcmQ=
       ${AMQ_KEYSTORE_PASSWORD}: cGFzc3dvcmQ=
   - apiVersion: v1
+    data:
+      LDAP_BIND_PASSWORD: c2VjcmV0
+    kind: Secret
+    metadata:
+      name: ldap-secret
+    type: Opaque
+  - apiVersion: v1
     kind: ServiceAccount
     metadata:
       name: ${APPLICATION_NAME}-service-account
@@ -144,6 +151,20 @@ objects:
       ports:
         - targetPort: 8888
           port: 8888
+      selector:
+        deploymentConfig: ${APPLICATION_NAME}-amq
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        description: The broker's console and Jolokia port.
+      labels:
+        application: ${APPLICATION_NAME}
+      name: ${AMQ_NAME}-amq-jolokia
+    spec:
+      ports:
+        - port: 8161
+          targetPort: 8161
       selector:
         deploymentConfig: ${APPLICATION_NAME}-amq
   - apiVersion: apps/v1beta1
@@ -409,7 +430,7 @@ objects:
                     command:
                       - sh
                       - '-c'
-                      - sed -i '/Running Broker/a /bin/sh /home/jboss/broker/etc/pre_launch.sh' /opt/amq/bin/launch.sh
+                      - sed -i '/Running Broker/a source /home/jboss/broker/etc/pre_launch.sh' /opt/amq/bin/launch.sh
               ports:
                 - containerPort: 8161
                   name: console-jolokia
