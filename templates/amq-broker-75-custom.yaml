@@ -153,6 +153,7 @@ objects:
           port: 8888
       selector:
         deploymentConfig: ${APPLICATION_NAME}-amq
+
   - apiVersion: v1
     kind: Service
     metadata:
@@ -167,6 +168,27 @@ objects:
           targetPort: 8161
       selector:
         deploymentConfig: ${APPLICATION_NAME}-amq
+      sessionAffinity: None
+      type: ClusterIP
+
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      annotations:
+        openshift.io/host.generated: 'true'
+      labels:
+        application: ${APPLICATION_NAME}
+      name: console
+    spec:
+      to:
+        kind: Service
+        name: ${AMQ_NAME}-amq-jolokia
+        weight: 100
+      wildcardPolicy: None
+
+
+
+
   - apiVersion: apps/v1beta1
     kind: StatefulSet
     metadata:
@@ -418,13 +440,6 @@ objects:
                     - "/opt/amq/bin/readinessProbe.sh"
               image: ${IMAGE}
               name: ${APPLICATION_NAME}-amq
-              lifecycle:
-                postStart:
-                  exec:
-                    command:
-                      - sh
-                      - '-c'
-                      - sed -i '/Running Broker/a    . /home/jboss/broker/etc/pre_launch.sh' /opt/amq/bin/launch.sh
               ports:
                 - containerPort: 8161
                   name: console-jolokia

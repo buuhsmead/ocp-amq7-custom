@@ -16,8 +16,7 @@ oc new-app https://github.com/buuhsmead/ocp-amq7-custom
 
 
 # From CLI
-oc new-build amq-broker:7.5~https://github.com/buuhsmead/ocp-amq7-custom.git \
-    --name=amq7-custom
+oc new-build amq-broker:7.5~https://github.com/buuhsmead/ocp-amq7-custom.git --name=amq7-custom
 
 oc process -f ./templates/amq-broker-75-custom.yaml \
     -p APPLICATION_NAME="amq-broker" \
@@ -39,6 +38,32 @@ oc process -f ./templates/amq-broker-75-custom.yaml \
 
 oc scale --replicas=0 sts amq-broker-amq
 
+
+# LDAP 
+./configuration/login.config
+
+## User
+dn: uid=john,dc=example,dc=com
+changetype: add
+objectClass: account
+objectClass: top
+objectClass: simpleSecurityObject
+uid: john
+userPassword:: R2VoZWlt
+
+## Group / Role
+dn: cn=OT-ADMIN,dc=example,dc=com
+changetype: add
+objectClass: groupOfNames
+objectClass: top
+member: uid=john,dc=example,dc=com
+cn: OT-ADMIN
+
+
+
+# Access from within Pod
+
+./bin/artemis producer --url tcp://amq-broker-amq-1.broker-amq-headless.amq-custom.svc.cluster.local:61616 --user john --password Geheim
 
 
 # Testing
