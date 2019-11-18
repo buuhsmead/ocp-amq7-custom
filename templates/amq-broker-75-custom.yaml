@@ -310,14 +310,10 @@ objects:
           }
     spec:
       podManagementPolicy: OrderedReady
-      replicas: ${AMQ_REPLICAS}
+      replicas: ${{AMQ_REPLICAS}}
       selector:
         matchLabels:
           app: ${APPLICATION_NAME}-amq
-      strategy:
-        rollingParams:
-          maxSurge: 0
-        type: Rolling
       serviceName: ${AMQ_NAME}-amq-headless
       template:
         metadata:
@@ -382,7 +378,7 @@ objects:
                 - name: AMQ_CLUSTERED
                   value: ${AMQ_CLUSTERED}
                 - name: AMQ_REPLICAS
-                  value: "${AMQ_REPLICAS}"
+                  value: ${AMQ_REPLICAS}
                 - name: AMQ_CLUSTER_USER
                   valueFrom:
                     secretKeyRef:
@@ -583,6 +579,7 @@ parameters:
     displayName: AMQ SSL Provider
     name: AMQ_SSL_PROVIDER
     required: false
+    value: JDK
   - description: The directory to use for data storage
     displayName: AMQ Data Directory
     name: AMQ_DATA_DIR
