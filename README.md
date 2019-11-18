@@ -16,6 +16,8 @@ oc new-app https://github.com/buuhsmead/ocp-amq7-custom
 
 
 # From CLI
+oc new-build amq-broker:7.5~https://github.com/buuhsmead/ocp-amq7-custom.git \
+    --name=amq7-custom
 
 oc process -f ./templates/amq-broker-75-custom.yaml \
     -p APPLICATION_NAME="amq-broker" \
@@ -29,11 +31,13 @@ oc process -f ./templates/amq-broker-75-custom.yaml \
     -p AMQ_TRUSTSTORE_PASSWORD=password \
     -p AMQ_KEYSTORE_PASSWORD=password \
     -p AMQ_DATA_DIR_LOGGING=true \
-    -p IMAGE=openshift/amq-broker:7.5 \
+    -p IMAGE=172.30.1.1:5000/amq-custom/amq7-custom:latest \
     -p AMQ_PROTOCOL=amqp \
     -p AMQ_CLUSTERED=true \
-    -p AMQ_REPLICAS="2" -o yaml | oc apply -f -
+    -p AMQ_REPLICAS=2 -o yaml | oc apply -f -
 
+
+oc scale --replicas=0 sts amq-broker-amq
 
 
 

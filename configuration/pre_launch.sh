@@ -5,9 +5,9 @@ echo "PRE LAUNCH START"
 INSTANCE_DIR=/home/jboss/broker
 
 
-function swapVars() {
+function replaceVars() {
   sed -i "s/\${LDAP_BIND_PASSWORD}/$LDAP_BIND_PASSWORD/g" $1
 }
 
-swapVars $INSTANCE_DIR/etc/login.config
+replaceVars $INSTANCE_DIR/etc/login.config
 
