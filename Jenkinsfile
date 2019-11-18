@@ -136,6 +136,38 @@ pipeline {
 			}
 		}
 
+		stage('Update APPLICATION through template') {
+			when {
+				environment name: 'APP_ALREADY_EXISTS',
+				value: 'tue'
+			}
+			steps {
+				script {
+					openshift.withCluster() {
+						//openshift.verbose() // set logging level for subsequent operations executed (loglevel=8)
+						openshift.withProject("${env.NAMESPACE}") {
+							def no_of_replicas = Integer.parseInt("${params.NO_OF_REPLICAS}")
+
+			//				def amqSts = openshift.newApp("amq-broker-75-custom", "-p APPLICATION_NAME=${params.APP_NAME}", "-p AMQ_QUEUES=demoQueue", "-p AMQ_ADDRESSES=demoTopic", "-p AMQ_USER=amq-demo-user", "-p AMQ_PASSWORD=passw0rd", "-p AMQ_ROLE=OT-ADMIN,OT-VIEW,OT-DEV", "-p AMQ_SECRET=amq-app-secret", "-p AMQ_DATA_DIR=/opt/amq/data", "-p AMQ_TRUSTSTORE_PASSWORD=password", "-p AMQ_KEYSTORE_PASSWORD=password", "-p AMQ_DATA_DIR_LOGGING=true", "-p IMAGE=${env.NAMESPACE}/amq7-custom:${env.TAG}", "-p AMQ_PROTOCOL=amqp", "-p AMQ_CLUSTERED=true", "-p AMQ_REPLICAS=${no_of_replicas}", "-e SCRIPT_DEBUG=true")
+def models = openshift.process( "amq-broker-75-custom"", amq-broker-75-custom", "-p APPLICATION_NAME=${params.APP_NAME}", "-p AMQ_QUEUES=demoQueue", "-p AMQ_ADDRESSES=demoTopic", "-p AMQ_USER=amq-demo-user", "-p AMQ_PASSWORD=passw0rd", "-p AMQ_ROLE=OT-ADMIN,OT-VIEW,OT-DEV", "-p AMQ_SECRET=amq-app-secret", "-p AMQ_DATA_DIR=/opt/amq/data", "-p AMQ_TRUSTSTORE_PASSWORD=password", "-p AMQ_KEYSTORE_PASSWORD=password", "-p AMQ_DATA_DIR_LOGGING=true", "-p IMAGE=${env.NAMESPACE}/amq7-custom:${env.TAG}", "-p AMQ_PROTOCOL=amqp", "-p AMQ_CLUSTERED=true", "-p AMQ_REPLICAS=${no_of_replicas}", "-e SCRIPT_DEBUG=true")
+openshift.apply(models)
+
+
+							amqSts = amqSts.narrow('statefulset')
+							timeout(15) {
+								amqSts.watch {
+									echo "Waiting for ${it.name()} to be ready"
+									return it.object().status.readyReplicas == no_of_replicas
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+
 		stage('Recreate PODs to take latest image') {
 			when {
 				environment name: 'APP_ALREADY_EXISTS',
