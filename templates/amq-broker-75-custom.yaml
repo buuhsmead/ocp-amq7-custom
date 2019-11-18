@@ -416,6 +416,8 @@ objects:
                     secretKeyRef:
                       key: LDAP_BIND_PASSWORD
                       name: ldap-secret
+                - name: SCRIPT_DEBUG
+                  value: "true"
               readinessProbe:
                 exec:
                   command:
