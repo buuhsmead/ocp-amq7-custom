@@ -391,7 +391,10 @@ objects:
                 - name: AMQ_JOURNAL_TYPE
                   value: ${AMQ_JOURNAL_TYPE}
                 - name: LDAP_BIND_PASSWORD
-                  value: ${LDAP_BIND_PASSWORD}
+                  valueFrom:
+                    secretKeyRef:
+                      key: LDAP_BIND_PASSWORD
+                      name: ldap-secret
               readinessProbe:
                 exec:
                   command:
