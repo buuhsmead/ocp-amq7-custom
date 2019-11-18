@@ -139,7 +139,7 @@ pipeline {
 		stage('Update APPLICATION through template') {
 			when {
 				environment name: 'APP_ALREADY_EXISTS',
-				value: 'tue'
+				value: 'true'
 			}
 			steps {
 				script {
