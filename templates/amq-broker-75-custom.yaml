@@ -16,6 +16,9 @@ metadata:
       This template defines resources needed to develop a Red Hat AMQ Broker 7.5 based application, including a statefulset configuration, using persistent storage and secure communication using SSL.
     template.openshift.io/support-url: 'https://access.redhat.com'
     version: 1.4.16
+    labels:
+      application: ${APPLICATION_NAME}
+      broker: ${APPLICATION_NAME}
   name: amq-broker-75-custom
 objects:
   - apiVersion: v1
@@ -492,6 +495,26 @@ objects:
                 storage: ${VOLUME_CAPACITY}
       triggers:
         - type: ConfigChange
+
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      annotations:
+        openshift.io/host.generated: 'true'
+      labels:
+        application: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}-external
+    spec:
+      port:
+        targetPort: all-ssl
+      tls:
+        termination: passthrough
+      to:
+        kind: Service
+        name: ${AMQ_NAME}-amq-headless
+        weight: 100
+      wildcardPolicy: None
+
 parameters:
   - description: The name for the application.
     displayName: Application Name

@@ -3,7 +3,7 @@ AMQ7 on OCP and customizing
 
 oc new-project amq-custom
 
-create a jenkins emphemeral with 1Gi memory
+create a jenkins ephemeral with 1Gi memory
 
 
 # Give jenkins SA enough rights (fine tuning still needed)
