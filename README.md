@@ -29,8 +29,8 @@ oc process -f ./templates/amq-broker-75-custom.yaml \
     -p APPLICATION_NAME="amq-broker" \
     -p AMQ_QUEUES=demoQueue \
     -p AMQ_ADDRESSES=demoTopic \
-    -p AMQ_USER=amq-demo-user \
-    -p AMQ_PASSWORD=passw0rd \
+    -p AMQ_USER=admin \
+    -p AMQ_PASSWORD=admin \
     -p AMQ_ROLE=OT-ADMIN,OT-VIEW,OT-DEV,admin \
     -p AMQ_SECRET=amq-app-secret \
     -p AMQ_DATA_DIR=/opt/amq/data \
