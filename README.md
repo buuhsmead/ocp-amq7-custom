@@ -33,10 +33,33 @@ oc process -f ./templates/amq-broker-75-custom.yaml \
     -p IMAGE=172.30.1.1:5000/amq-custom/amq7-custom:latest \
     -p AMQ_PROTOCOL=amqp \
     -p AMQ_CLUSTERED=true \
-    -p AMQ_REPLICAS=2 -o yaml | oc apply -f -
+    -p AMQ_REPLICAS=0 \
+    -o yaml | oc apply -f -
+
+oc process -f ./templates/amq-broker-75-custom.yaml \
+    -p APPLICATION_NAME="amq-broker" \
+    -p AMQ_QUEUES=demoQueue \
+    -p AMQ_ADDRESSES=demoTopic \
+    -p AMQ_USER=amq-demo-user \
+    -p AMQ_PASSWORD=passw0rd \
+    -p AMQ_ROLE=OT-ADMIN,OT-VIEW,OT-DEV \
+    -p AMQ_SECRET=amq-app-secret \
+    -p AMQ_DATA_DIR=/opt/amq/data \
+    -p AMQ_TRUSTSTORE_PASSWORD=password \
+    -p AMQ_KEYSTORE_PASSWORD=password \
+    -p AMQ_DATA_DIR_LOGGING=true \
+    -p IMAGE=172.30.1.1:5000/amq-custom/amq7-custom:latest \
+    -p AMQ_PROTOCOL=amqp \
+    -p AMQ_CLUSTERED=true \
+    -p AMQ_REPLICAS=0 \
+    -p STORAGE_CLASS_NAME=glusterfs-dev \
+    -o yaml | oc apply -f -
 
 
-oc scale --replicas=0 sts amq-broker-amq
+
+
+
+oc scale --replicas=2 sts amq-broker-amq
 
 
 # LDAP 

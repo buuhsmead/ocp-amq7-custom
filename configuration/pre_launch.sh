@@ -1,8 +1,8 @@
 #!/bin/sh
 
-echo "PRE LAUNCH START"
+echo "PRE LAUNCH START : ${INSTANCE_DIR}"
 
-INSTANCE_DIR=/home/jboss/broker
+#INSTANCE_DIR=/home/jboss/${AMQ_NAME}
 
 
 function replaceVars() {

@@ -35,6 +35,7 @@ objects:
       ${AMQ_CLUSTER_PASSWORD}: Y2x1c3RlcnBhc3N3b3Jk
       ${AMQ_TRUSTSTORE_PASSWORD}: cGFzc3dvcmQ=
       ${AMQ_KEYSTORE_PASSWORD}: cGFzc3dvcmQ=
+
   - apiVersion: v1
     data:
       LDAP_BIND_PASSWORD: c2VjcmV0
@@ -42,12 +43,14 @@ objects:
     metadata:
       name: ldap-secret
     type: Opaque
+
   - apiVersion: v1
     kind: ServiceAccount
     metadata:
       name: ${APPLICATION_NAME}-service-account
       labels:
         app: ${APPLICATION_NAME}
+
   - apiVersion: rbac.authorization.k8s.io/v1beta1
     kind: Role
     metadata:
@@ -75,6 +78,7 @@ objects:
         verbs:
           - get
           - list
+
   - apiVersion: rbac.authorization.k8s.io/v1beta1
     kind: RoleBinding
     metadata:
@@ -88,6 +92,7 @@ objects:
       kind: Role
       name: ${APPLICATION_NAME}-role
       apiGroup: rbac.authorization.k8s.io
+
   - apiVersion: v1
     kind: Service
     metadata:
@@ -140,6 +145,7 @@ objects:
       selector:
         deploymentConfig: ${APPLICATION_NAME}-amq
       type: ClusterIP
+
   - apiVersion: v1
     kind: Service
     metadata:
@@ -493,6 +499,7 @@ objects:
             resources:
               requests:
                 storage: ${VOLUME_CAPACITY}
+            storageClassName: ${STORAGE_CLASS_NAME}
       triggers:
         - type: ConfigChange
 
@@ -652,6 +659,10 @@ parameters:
     name: AMQ_JOURNAL_TYPE
     value: nio
     required: false
+  - description: name of the storage class (glusterfs-dev)
+    displayName: Storage Class Name
+    name: STORAGE_CLASS_NAME
+    value: default
   - description: password bind ldap
     displayName: LDAP bind password
     name: LDAP_BIND_PASSWORD
