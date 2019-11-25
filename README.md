@@ -18,6 +18,13 @@ oc new-app https://github.com/buuhsmead/ocp-amq7-custom
 # From CLI
 oc new-build amq-broker:7.5~https://github.com/buuhsmead/ocp-amq7-custom.git --name=amq7-custom
 
+oc create configmap broker-extra-config \
+--from-file=addresses.xml=extra-config/xinclude-config-addresses.xml \
+--from-file=address.xml=extra-config/xinclude-config-address-settings.xml \
+--from-file=security.xml=extra-config/xinclude-config-security-settings.xml
+
+
+
 oc process -f ./templates/amq-broker-75-custom.yaml \
     -p APPLICATION_NAME="amq-broker" \
     -p AMQ_QUEUES=demoQueue \
@@ -33,7 +40,7 @@ oc process -f ./templates/amq-broker-75-custom.yaml \
     -p IMAGE=172.30.1.1:5000/amq-custom/amq7-custom:latest \
     -p AMQ_PROTOCOL=amqp \
     -p AMQ_CLUSTERED=true \
-    -p AMQ_REPLICAS=0 \
+    -p AMQ_REPLICAS=1 \
     -o yaml | oc apply -f -
 
 oc process -f ./templates/amq-broker-75-custom.yaml \

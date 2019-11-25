@@ -14,7 +14,7 @@ metadata:
     template.openshift.io/documentation-url: 'https://access.redhat.com/documentation/en/red-hat-amq/'
     template.openshift.io/long-description: >-
       This template defines resources needed to develop a Red Hat AMQ Broker 7.5 based application, including a statefulset configuration, using persistent storage and secure communication using SSL.
-    template.openshift.io/support-url: 'https://access.redhat.com'    
+    template.openshift.io/support-url: 'https://access.redhat.com'
     version: 1.4.16
   name: amq-broker-75-persistence-clustered-ssl
 objects:
@@ -32,6 +32,15 @@ objects:
     ${AMQ_CLUSTER_PASSWORD}: Y2x1c3RlcnBhc3N3b3Jk
     ${AMQ_TRUSTSTORE_PASSWORD}: cGFzc3dvcmQ=
     ${AMQ_KEYSTORE_PASSWORD}: cGFzc3dvcmQ=
+
+
+
+
+
+
+
+
+
 - apiVersion: v1
   kind: ServiceAccount
   metadata:

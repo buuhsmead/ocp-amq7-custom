@@ -302,6 +302,10 @@ objects:
       selector:
         matchLabels:
           app: ${APPLICATION_NAME}-amq
+      strategy:
+        rollingParams:
+          maxSurge: 0
+        type: Rolling
       serviceName: ${AMQ_NAME}-amq-headless
       template:
         metadata:
@@ -440,11 +444,18 @@ objects:
                 - mountPath: /etc/amq-secret-volume
                   name: broker-secret-volume
                   readOnly: true
+                - mountPath: /home/jboss/broker-extra-config
+                  name: broker-extra-config
+                  readOnly: true
           terminationGracePeriodSeconds: 60
           volumes:
             - name: broker-secret-volume
               secret:
                 secretName: ${AMQ_SECRET}
+            - configMap:
+                defaultMode: 420
+                name: broker-extra-config
+              name: broker-extra-config
       volumeClaimTemplates:
         - apiVersion: v1
           kind: PersistentVolumeClaim
@@ -456,27 +467,30 @@ objects:
             resources:
               requests:
                 storage: ${VOLUME_CAPACITY}
-            storageClassName: ${STORAGE_CLASS_NAME}
       triggers:
         - type: ConfigChange
-  - apiVersion: route.openshift.io/v1
-    kind: Route
+
+  - apiVersion: v1
+    kind: Service
     metadata:
       annotations:
-        openshift.io/host.generated: 'true'
+        description: 'Service for the management console of broker pod 0'
       labels:
         application: ${APPLICATION_NAME}
-      name: ${APPLICATION_NAME}-external
+        broker: ${APPLICATION_NAME}
+        template: amq-broker-75-custom-template
+      name: amq-broker-console-0
     spec:
-      port:
-        targetPort: all-ssl
-      tls:
-        termination: passthrough
-      to:
-        kind: Service
-        name: ${AMQ_NAME}-amq-headless
-        weight: 100
-      wildcardPolicy: None
+      ports:
+        - name: console-jolokia
+          port: 8161
+          protocol: TCP
+          targetPort: 8161
+      selector:
+        deploymentConfig: ${APPLICATION_NAME}-amq
+        statefulset.kubernetes.io/pod-name: ${APPLICATION_NAME}-amq-0
+      type: ClusterIP
+
   - apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
@@ -484,13 +498,66 @@ objects:
         openshift.io/host.generated: 'true'
       labels:
         application: ${APPLICATION_NAME}
-      name: console-jolokia
+        broker: ${APPLICATION_NAME}
+        template: amq-broker-75-custom-template
+        xpaas: 1.4.16
+      name: ${APPLICATION_NAME}-console-0
     spec:
       port:
         targetPort: console-jolokia
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: passthrough
       to:
         kind: Service
-        name: ${AMQ_NAME}-amq-headless
+        name: ${APPLICATION_NAME}-console-0
+        weight: 100
+      wildcardPolicy: None
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      annotations:
+        description: 'Service for the management console of broker pod 1'
+      labels:
+        application: ${APPLICATION_NAME}
+        broker: ${APPLICATION_NAME}
+        template: amq-broker-75-custom-template
+      name: amq-broker-console-1
+    spec:
+      ports:
+        - name: console-jolokia
+          port: 8161
+          protocol: TCP
+          targetPort: 8161
+      selector:
+        deploymentConfig: ${APPLICATION_NAME}-amq
+        statefulset.kubernetes.io/pod-name: ${APPLICATION_NAME}-amq-1
+      type: ClusterIP
+
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      annotations:
+        openshift.io/host.generated: 'true'
+      labels:
+        application: ${APPLICATION_NAME}
+        broker: ${APPLICATION_NAME}
+        template: amq-broker-75-custom-template
+        xpaas: 1.4.16
+      name: ${APPLICATION_NAME}-console-1
+    spec:
+      port:
+        targetPort: console-jolokia
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: passthrough
+      to:
+        kind: Service
+        name: ${APPLICATION_NAME}-console-1
+        weight: 100
+      wildcardPolicy: None
+
 parameters:
   - description: The name for the application.
     displayName: Application Name
@@ -542,7 +609,7 @@ parameters:
   - description: Number of broker replicas for a cluster
     displayName: Number of Replicas
     name: AMQ_REPLICAS
-    value: '0'
+    value: '2'
   - description: Clustered user It serves as a key by which the real cluster user name is retrieved from kubernetes secret object.
     displayName: cluster user
     from: user[a-zA-Z0-9]{3}
