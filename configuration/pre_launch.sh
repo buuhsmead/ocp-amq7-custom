@@ -15,11 +15,11 @@ replaceVars $BROKER_DIR/etc/login.config
 
 
 
-sed '/<security-settings>/,/<\/security-settings>/d' $BROKER_DIR/etc/broker.xml
+sed -i '/<security-settings>/,/<\/security-settings>/d' $BROKER_DIR/etc/broker.xml
 
-sed '/<address-settings>/,/<\/address-settings>/d' $BROKER_DIR/etc/broker.xml
+sed -i '/<address-settings>/,/<\/address-settings>/d' $BROKER_DIR/etc/broker.xml
 
-sed '/<addresses>/,/<\/addresses>/d' $BROKER_DIR/etc/broker.xml
+sed -i '/<addresses>/,/<\/addresses>/d' $BROKER_DIR/etc/broker.xml
 
 sed -i '/<\/core>/i  <xi:include href="/home/jboss/broker-extra-config/address.xml"/><xi:include href="/home/jboss/broker-extra-config/security.xml"/><xi:include href="/home/jboss/broker-extra-config/addresses.xml"/>' $BROKER_DIR/etc/broker.xml
 
