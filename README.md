@@ -24,7 +24,7 @@ oc process -f ./templates/amq-broker-75-custom.yaml \
     -p AMQ_ADDRESSES=demoTopic \
     -p AMQ_USER=amq-demo-user \
     -p AMQ_PASSWORD=passw0rd \
-    -p AMQ_ROLE=OT-ADMIN,OT-VIEW,OT-DEV \
+    -p AMQ_ROLE=OT-ADMIN,OT-VIEW,OT-DEV,admin \
     -p AMQ_SECRET=amq-app-secret \
     -p AMQ_DATA_DIR=/opt/amq/data \
     -p AMQ_TRUSTSTORE_PASSWORD=password \
@@ -42,7 +42,7 @@ oc process -f ./templates/amq-broker-75-custom.yaml \
     -p AMQ_ADDRESSES=demoTopic \
     -p AMQ_USER=amq-demo-user \
     -p AMQ_PASSWORD=passw0rd \
-    -p AMQ_ROLE=OT-ADMIN,OT-VIEW,OT-DEV \
+    -p AMQ_ROLE=OT-ADMIN,OT-VIEW,OT-DEV,admin \
     -p AMQ_SECRET=amq-app-secret \
     -p AMQ_DATA_DIR=/opt/amq/data \
     -p AMQ_TRUSTSTORE_PASSWORD=password \
@@ -59,7 +59,7 @@ oc process -f ./templates/amq-broker-75-custom.yaml \
 
 
 
-oc scale --replicas=2 sts amq-broker-amq
+oc scale --replicas=1 sts amq-broker-amq
 
 
 # LDAP 

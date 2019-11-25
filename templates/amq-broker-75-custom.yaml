@@ -3,6 +3,8 @@ kind: Template
 labels:
   template: amq-broker-75-custom-template
   xpaas: 1.4.16
+  application: ${APPLICATION_NAME}
+  broker: ${APPLICATION_NAME}
 message: A new messaging service with SSL support has been created in your project. It will handle the protocol(s) "${AMQ_PROTOCOL}". The username/password for accessing the service is ${AMQ_USER}/${AMQ_PASSWORD}. Please be sure to create a secret named "${AMQ_SECRET}" containing the trust store and key store files ("${AMQ_TRUSTSTORE}" and "${AMQ_KEYSTORE}") used for serving secure content.
 metadata:
   annotations:
@@ -16,9 +18,6 @@ metadata:
       This template defines resources needed to develop a Red Hat AMQ Broker 7.5 based application, including a statefulset configuration, using persistent storage and secure communication using SSL.
     template.openshift.io/support-url: 'https://access.redhat.com'
     version: 1.4.16
-    labels:
-      application: ${APPLICATION_NAME}
-      broker: ${APPLICATION_NAME}
   name: amq-broker-75-custom
 objects:
   - apiVersion: v1
@@ -35,7 +34,6 @@ objects:
       ${AMQ_CLUSTER_PASSWORD}: Y2x1c3RlcnBhc3N3b3Jk
       ${AMQ_TRUSTSTORE_PASSWORD}: cGFzc3dvcmQ=
       ${AMQ_KEYSTORE_PASSWORD}: cGFzc3dvcmQ=
-
   - apiVersion: v1
     data:
       LDAP_BIND_PASSWORD: c2VjcmV0
@@ -43,14 +41,12 @@ objects:
     metadata:
       name: ldap-secret
     type: Opaque
-
   - apiVersion: v1
     kind: ServiceAccount
     metadata:
       name: ${APPLICATION_NAME}-service-account
       labels:
         app: ${APPLICATION_NAME}
-
   - apiVersion: rbac.authorization.k8s.io/v1beta1
     kind: Role
     metadata:
@@ -78,7 +74,6 @@ objects:
         verbs:
           - get
           - list
-
   - apiVersion: rbac.authorization.k8s.io/v1beta1
     kind: RoleBinding
     metadata:
@@ -92,7 +87,6 @@ objects:
       kind: Role
       name: ${APPLICATION_NAME}-role
       apiGroup: rbac.authorization.k8s.io
-
   - apiVersion: v1
     kind: Service
     metadata:
@@ -145,7 +139,6 @@ objects:
       selector:
         deploymentConfig: ${APPLICATION_NAME}-amq
       type: ClusterIP
-
   - apiVersion: v1
     kind: Service
     metadata:
@@ -162,42 +155,6 @@ objects:
           port: 8888
       selector:
         deploymentConfig: ${APPLICATION_NAME}-amq
-
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      annotations:
-        description: The broker's console and Jolokia port.
-      labels:
-        application: ${APPLICATION_NAME}
-      name: ${AMQ_NAME}-amq-jolokia
-    spec:
-      ports:
-        - port: 8161
-          targetPort: 8161
-      selector:
-        deploymentConfig: ${APPLICATION_NAME}-amq
-      sessionAffinity: None
-      type: ClusterIP
-
-  - apiVersion: route.openshift.io/v1
-    kind: Route
-    metadata:
-      annotations:
-        openshift.io/host.generated: 'true'
-      labels:
-        application: ${APPLICATION_NAME}
-      name: console
-    spec:
-      to:
-        kind: Service
-        name: ${AMQ_NAME}-amq-jolokia
-        weight: 100
-      wildcardPolicy: None
-
-
-
-
   - apiVersion: apps/v1beta1
     kind: StatefulSet
     metadata:
@@ -502,7 +459,6 @@ objects:
             storageClassName: ${STORAGE_CLASS_NAME}
       triggers:
         - type: ConfigChange
-
   - apiVersion: route.openshift.io/v1
     kind: Route
     metadata:
@@ -521,7 +477,20 @@ objects:
         name: ${AMQ_NAME}-amq-headless
         weight: 100
       wildcardPolicy: None
-
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      annotations:
+        openshift.io/host.generated: 'true'
+      labels:
+        application: ${APPLICATION_NAME}
+      name: console-jolokia
+    spec:
+      port:
+        targetPort: console-jolokia
+      to:
+        kind: Service
+        name: ${AMQ_NAME}-amq-headless
 parameters:
   - description: The name for the application.
     displayName: Application Name
