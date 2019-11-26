@@ -18,11 +18,18 @@ oc new-app https://github.com/buuhsmead/ocp-amq7-custom
 # From CLI
 oc new-build amq-broker:7.5~https://github.com/buuhsmead/ocp-amq7-custom.git --name=amq7-custom
 
+oc create secret generic ldap-secret --from-literal=LDAP_BIND_PASSWORD=secret
+
 oc create configmap broker-extra-config \
 --from-file=addresses.xml=extra-config/xinclude-config-addresses.xml \
 --from-file=address.xml=extra-config/xinclude-config-address-settings.xml \
 --from-file=security.xml=extra-config/xinclude-config-security-settings.xml
 
+
+# broker.ks and broker.ts via tls/gen-tls.sh
+oc create secret generic amq-app-secret --from-file=broker.ks --from-file=broker.ts
+
+oc secrets add sa/${APPLICATION_NAME}-service-account secret/amq-app-secret
 
 
 oc process -f ./templates/amq-broker-75-custom.yaml \
