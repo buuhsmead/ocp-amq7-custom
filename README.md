@@ -44,7 +44,7 @@ oc process -f ./templates/amq-broker-75-custom.yaml \
     -p AMQ_TRUSTSTORE_PASSWORD=password \
     -p AMQ_KEYSTORE_PASSWORD=password \
     -p AMQ_DATA_DIR_LOGGING=true \
-    -p IMAGE=172.30.1.1:5000/amq-custom/amq7-custom:latest \
+    -p IMAGE=172.30.1.1:5000/$(oc project -q)/amq7-custom:latest \
     -p AMQ_PROTOCOL=amqp \
     -p AMQ_CLUSTERED=true \
     -p AMQ_REPLICAS=1 \
@@ -62,7 +62,7 @@ oc process -f ./templates/amq-broker-75-custom.yaml \
     -p AMQ_TRUSTSTORE_PASSWORD=password \
     -p AMQ_KEYSTORE_PASSWORD=password \
     -p AMQ_DATA_DIR_LOGGING=true \
-    -p IMAGE=172.30.1.1:5000/amq-custom/amq7-custom:latest \
+    -p IMAGE=172.30.1.1:5000/$(oc project -q)/amq7-custom:latest \
     -p AMQ_PROTOCOL=amqp \
     -p AMQ_CLUSTERED=true \
     -p AMQ_REPLICAS=0 \
