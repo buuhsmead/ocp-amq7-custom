@@ -43,3 +43,9 @@ done
 
 
 touch $BROKER_DIR/etc/broker.xml
+
+# 
+cp /opt/amq/lib/artemis-prometheus-metrics-plugin-*.jar to $BROKER_DIR/lib
+
+
+
