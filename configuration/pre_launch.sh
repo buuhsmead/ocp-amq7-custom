@@ -34,10 +34,10 @@ FILES="$BROKER_DIR/etc/*"
 
 for item in $FILES
 do
-	if [[ "$(basename '$item')" != "pre_launch.sh" ]]
+	if [[ "$(basename $item)" != "pre_launch.sh" ]]
 	then
-		replaceVars '$item'
-	fi
+		replaceVars "${item}"
+	fi	
 done
 
 
