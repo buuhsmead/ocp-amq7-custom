@@ -1,13 +1,25 @@
 <addresses xmlns="urn:activemq:core">
-        <address name="DLQ">
-            <anycast>
-                <queue name="DLQ" />
-            </anycast>
-        </address>
-        <address name="ExpiryQueue">
-            <anycast>
-                <queue name="ExpiryQueue" />
-            </anycast>
-        </address>
+	<address name="DLQ">
+		<anycast>
+			<queue name="DLQ" />
+		</anycast>
+	</address>
+	<address name="ExpiryQueue">
+		<anycast>
+			<queue name="ExpiryQueue" />
+		</anycast>
+	</address>
 
-    </addresses>
+	<address name="Q_ERROR_IN">
+		<anycast>
+			<queue name="Q_ERROR_IN" />
+		</anycast>
+	</address>
+	<address name="Q_ERROR_INFO">
+		<anycast>
+			<queue name="Q_ERROR_INFO" />
+		</anycast>
+	</address>
+
+
+</addresses>
