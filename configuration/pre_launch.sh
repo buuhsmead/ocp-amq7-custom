@@ -34,9 +34,9 @@ FILES="$BROKER_DIR/etc/*"
 
 for item in $FILES
 do
-	if [[ "$(basename $item)" != "pre_launch.sh" ]]
+	if [[ "$(basename '$item')" != "pre_launch.sh" ]]
 	then
-		replaceVars $item
+		replaceVars '$item'
 	fi
 done
 
@@ -45,7 +45,7 @@ done
 touch $BROKER_DIR/etc/broker.xml
 
 # 
-cp /opt/amq/lib/artemis-prometheus-metrics-plugin-*.jar to $BROKER_DIR/lib
+cp /opt/amq/lib/artemis-prometheus-metrics-plugin-*.jar ${BROKER_DIR}/lib
 
 
 
